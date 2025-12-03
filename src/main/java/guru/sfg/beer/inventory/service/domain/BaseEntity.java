@@ -16,17 +16,22 @@
  */
 package guru.sfg.beer.inventory.service.domain;
 
+import java.sql.Timestamp;
+import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.UUID;
 
 /**
  * Created by jt on 2019-01-26.
@@ -38,34 +43,30 @@ import java.util.UUID;
 @MappedSuperclass
 public class BaseEntity {
 
-    public BaseEntity(UUID id, Long version, Timestamp createdDate, Timestamp lastModifiedDate) {
-        this.id = id;
-        this.version = version;
-        this.createdDate = createdDate;
-        this.lastModifiedDate = lastModifiedDate;
-    }
+	public BaseEntity(UUID id, Long version, Timestamp createdDate, Timestamp lastModifiedDate) {
+		this.id = id;
+		this.version = version;
+		this.createdDate = createdDate;
+		this.lastModifiedDate = lastModifiedDate;
+	}
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Type(type="org.hibernate.type.UUIDCharType")
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false )
-    private UUID id;
+	@Id
+	@GeneratedValue
+	@Column(length = 36, columnDefinition = "varchar(36)", nullable = false)
+	@JdbcTypeCode(SqlTypes.VARCHAR)
+	private UUID id;
 
-    @Version
-    private Long version;
+	@Version
+	private Long version;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private Timestamp createdDate;
+	@CreationTimestamp
+	@Column(updatable = false)
+	private Timestamp createdDate;
 
-    @UpdateTimestamp
-    private Timestamp lastModifiedDate;
+	@UpdateTimestamp
+	private Timestamp lastModifiedDate;
 
-    public boolean isNew() {
-        return this.id == null;
-    }
+	public boolean isNew() {
+		return this.id == null;
+	}
 }
