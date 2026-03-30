@@ -12,7 +12,6 @@ import guru.sfg.brewery.model.BeerOrderLineDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -40,6 +39,23 @@ public class AllocationServiceImpl implements AllocationService {
 		log.debug("Total Ordered: " + totalOrdered.get() + " Total Allocated: " + totalAllocated.get());
 
 		return totalOrdered.get() == totalAllocated.get();
+	}
+
+	@Override
+	public void deallocateOrder(BeerOrderDto beerOrderDto) {
+		beerOrderDto.getBeerOrderLines().forEach(beerOrderLine -> {
+			BeerInventory beerInventory = BeerInventory.builder() //
+					.beerId(beerOrderLine.getBeerId()) //
+					.upc(beerOrderLine.getUpc()) //
+					.quantityOnHand(beerOrderLine.getQuantityAllocated()) //
+					.build(); //
+
+			BeerInventory savedInventory = beerInventoryRepository.save(beerInventory);
+
+			log.debug("Saved inventory for beer upc: {} inventory id: {}", savedInventory.getUpc(),
+					savedInventory.getId());
+		});
+
 	}
 
 	private void allocateBeerOrderLine(BeerOrderLineDto beerOrderLine) {

@@ -10,4 +10,7 @@ public interface AllocationService {
 	 *         on allocation
 	 */
 	Boolean allocateOrder(BeerOrderDto beerOrder);
+
+	void deallocateOrder(BeerOrderDto beerOrder);
 }
+
