@@ -12,7 +12,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mssc-beer-inventory-service</name>
 	<description>MSSC Beer Inventory Service</description>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -20,18 +20,18 @@
 		</dependency>
 	</dependencies>
 
-	<url/>
+	<url />
 	<licenses>
-		<license/>
+		<license />
 	</licenses>
 	<developers>
-		<developer/>
+		<developer />
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+		<connection />
+		<developerConnection />
+		<tag />
+		<url />
 	</scm>
 	<properties>
 		<java.version>17</java.version>
@@ -41,6 +41,28 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- Attiva Jib EREDITANDO la base dal BOM ma personalizzando il
+			nome dell'app -->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<!-- NO <version> qui! La decide il BOM in <pluginManagement> -->
+				<configuration>
+					<to>
+						<image>
+							${project.artifactId}:${project.version}</image>
+					</to>
+					<container>
+						<ports>
+							<!-- Porta specifica di questo servizio -->
+							<port>8080</port>
+						</ports>
+						<labels>
+							<PROJECT_NAME>${project.artifactId}</PROJECT_NAME>
+						</labels>
+					</container>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
